@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loss Calculator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { display: flex; height: 100vh; }
+    .container { display: flex; width: 100%; }
+    .image-section { 
+      flex: 1; 
+      background: url('your-image.jpg') no-repeat center center/cover; 
+    }
+    .calculator-section { 
+      flex: 1; 
+      background: white; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 30px; 
+    }
+    .calculator-box {
+      max-width: 400px;
+      width: 100%;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h2 { color: #1d467c; margin-bottom: 15px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1d467c;
+      color: white;
+      border: none;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #969286; }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #c9302c;
+      background: #D1E1F5;
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 5px solid #1d467c;
+    }
+    .cta {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 12px 20px;
+      background: #1d467c;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .cta:hover { background: #969286; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="image-section"></div>
+    <div class="calculator-section">
+      <div class="calculator-box">
+        <h2>How Much Are Bad Suppliers Costing You?</h2>
+        <!-- Absolute Value Inputs -->
+        <input type="number" id="monthlyOrders" placeholder="📦 Monthly Number of Orders">
+        <input type="number" id="productCost" placeholder="💰 Average Product Cost ($)">
+        <input type="number" id="delayDays" placeholder="⏳ Delay Days (e.g., 30)">
+        
+        <!-- Percentage-Based Cost Factors -->
+        <input type="number" id="operationalPercentage" placeholder="💸 Additional Operational Cost (%)">
+        <input type="number" id="holdingPercentage" placeholder="🏭 Additional Holding Cost (%)">
+        <input type="number" id="defectiveCostPercentage" placeholder="💲 Cost Impact per Defective Unit (%)">
+        <input type="number" id="nonCompliancePercentage" placeholder="📜 Non-Compliance Risk (%)">
+        
+        <button onclick="calculateLoss()">Calculate Loss</button>
+        <div id="result"></div>
+        <a href="https://globalbasehk.com/" class="cta">Stop the Losses Now – Switch to Trusted Suppliers!</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function calculateLoss() {
+      // Retrieve absolute value inputs
+      let monthlyOrders = parseFloat(document.getElementById("monthlyOrders").value) || 0;
+      let productCost = parseFloat(document.getElementById("productCost").value) || 0;
+      let delayDays = parseFloat(document.getElementById("delayDays").value) || 0;
+      
+      // Retrieve additional cost factors (entered as percentages)
+      let operationalPercentage = parseFloat(document.getElementById("operationalPercentage").value) || 0;
+      let holdingPercentage = parseFloat(document.getElementById("holdingPercentage").value) || 0;
+      let defectiveCostPercentage = parseFloat(document.getElementById("defectiveCostPercentage").value) || 0;
+      let nonCompliancePercentage = parseFloat(document.getElementById("nonCompliancePercentage").value) || 0;
+      
+      // Assume a month has 30 operating days
+      const totalDays = 30;
+      let fractionDelay = delayDays / totalDays;
+      
+      // 1. Lost Sales Revenue (LSR)
+      // LSR = monthlyOrders * (delayDays / totalDays) * productCost
+      let lostSalesRevenue = monthlyOrders * fractionDelay * productCost;
+      
+      // 2. Additional Operational Costs (AOC)
+      // AOC = monthlyOrders * (delayDays / totalDays) * (operationalPercentage/100 * productCost)
+      let additionalOperationalCosts = monthlyOrders * fractionDelay * ((operationalPercentage / 100) * productCost);
+      
+      // 3. Inventory & Holding Costs (IHC)
+      // IHC = monthlyOrders * (delayDays / totalDays) * (holdingPercentage/100 * productCost)
+      let inventoryHoldingCosts = monthlyOrders * fractionDelay * ((holdingPercentage / 100) * productCost);
+      
+      // 4. Quality & Compliance Costs (QCC)
+      // Quality Cost = monthlyOrders * (delayDays/totalDays) * (defectiveCostPercentage/100 * productCost)
+      let qualityCost = monthlyOrders * fractionDelay * ((defectiveCostPercentage / 100) * productCost);
+      // Compliance Cost = monthlyOrders * (delayDays/totalDays) * (nonCompliancePercentage/100 * productCost)
+      let complianceCost = monthlyOrders * fractionDelay * ((nonCompliancePercentage / 100) * productCost);
+      let qualityComplianceCosts = qualityCost + complianceCost;
+      
+      // Total Loss Calculation
+      let totalMonthlyLoss = lostSalesRevenue + additionalOperationalCosts + inventoryHoldingCosts + qualityComplianceCosts;
+      let totalYearlyLoss = totalMonthlyLoss * 12;
+      
+      // Build the detailed breakdown result
+      let resultHtml = `<strong>Loss Breakdown:</strong><br>
+        <strong>Lost Sales Revenue:</strong> $${lostSalesRevenue.toLocaleString()}<br>
+        <strong>Additional Operational Costs:</strong> $${additionalOperationalCosts.toLocaleString()}<br>
+        <strong>Inventory & Holding Costs:</strong> $${inventoryHoldingCosts.toLocaleString()}<br>
+        <strong>Quality & Compliance Costs:</strong> $${qualityComplianceCosts.toLocaleString()}<br><br>
+        <strong>Total Monthly Loss:</strong> $${totalMonthlyLoss.toLocaleString()}<br>
+        <strong>Total Yearly Loss:</strong> $${totalYearlyLoss.toLocaleString()}`;
+      
+      document.getElementById("result").innerHTML = resultHtml;
+    }
+  </script>
+</body>
+</html>
