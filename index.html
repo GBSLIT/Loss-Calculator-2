@@ -4,16 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loss Calculator</title>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    /* Layout */
-    body { display: flex; min-height: 100vh; background: #f7f9fc; }
-    .container { display: flex; width: 100%; }
+
+    body { 
+      display: flex; 
+      min-height: 100vh; 
+      background: #f7f9fc; 
+    }
+
+    .container { 
+      display: flex; 
+      width: 100%; 
+    }
+
     .image-section { 
       flex: 1; 
       background: url('your-image.jpg') no-repeat center center/cover; 
       min-height: 100vh;
     }
+
     .calculator-section { 
       flex: 1; 
       background: white; 
@@ -22,6 +33,7 @@
       justify-content: center; 
       padding: 30px; 
     }
+
     .calculator-box {
       max-width: 400px;
       width: 100%;
@@ -31,7 +43,13 @@
       box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
       text-align: center;
     }
-    h2 { color: #1d467c; margin-bottom: 15px; line-height: 1.2; }
+
+    h2 { 
+      color: #1d467c; 
+      margin-bottom: 15px; 
+      line-height: 1.2; 
+    }
+
     input {
       width: 100%;
       padding: 12px;
@@ -42,11 +60,13 @@
       text-align: center;
       -moz-appearance: textfield;
     }
+
     input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+    input::-webkit-inner-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
     }
+
     button {
       width: 100%;
       padding: 14px;
@@ -58,7 +78,9 @@
       cursor: pointer;
       transition: 0.3s;
     }
+
     button:hover { background: #969286; }
+
     #result {
       margin-top: 15px;
       font-weight: bold;
@@ -69,6 +91,7 @@
       border-left: 5px solid #1d467c;
       text-align: left;
     }
+
     .cta {
       margin-top: 20px;
       display: inline-block;
@@ -82,18 +105,33 @@
       width: 100%;
       text-align: center;
     }
+
     .cta:hover { background: #969286; }
 
-    /* ---------- Responsive tweaks ---------- */
 
-    /* Medium screens: keep two columns but give the calculator more space */
+    /* ============================
+       Desktop: Center Calculator
+    ============================= */
+    @media (min-width: 1025px) {
+      .container { justify-content: center; }
+      .image-section { display: none; }
+      .calculator-section { flex: 0 1 620px; }
+    }
+
+
+    /* ============================
+       Tablet
+    ============================= */
     @media (max-width: 1024px) {
       .image-section { flex: 0.8; }
       .calculator-section { flex: 1.2; padding: 24px; }
       .calculator-box { max-width: 460px; }
     }
 
-    /* Phones: stack, hide the image, enlarge touch targets, prevent clipping */
+
+    /* ============================
+       Mobile View
+    ============================= */
     @media (max-width: 768px) {
       body { display: block; background: #fff; }
       .container { flex-direction: column; width: 100%; }
@@ -113,30 +151,47 @@
       .cta { font-size: 16px; padding: 14px; }
     }
 
-    /* Very small phones */
+
+    /* Extra small phones */
     @media (max-width: 360px) {
       h2 { font-size: 22px; }
       input, button, .cta { font-size: 16px; }
     }
 
-    /* Respect safe areas on modern phones */
+
+    /* Safe area (iPhone notch etc) */
     :root {
       --safe-top: env(safe-area-inset-top);
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
     }
-    .calculator-section { padding-left: calc(30px + var(--safe-left)); padding-right: calc(30px + var(--safe-right)); }
-    @media (max-width: 768px) {
-      .calculator-section { padding-left: calc(16px + var(--safe-left)); padding-right: calc(16px + var(--safe-right)); padding-top: calc(16px + var(--safe-top)); padding-bottom: calc(16px + var(--safe-bottom)); }
+
+    .calculator-section { 
+      padding-left: calc(30px + var(--safe-left)); 
+      padding-right: calc(30px + var(--safe-right)); 
     }
+
+    @media (max-width: 768px) {
+      .calculator-section {
+        padding-left: calc(16px + var(--safe-left));
+        padding-right: calc(16px + var(--safe-right));
+        padding-top: calc(16px + var(--safe-top));
+        padding-bottom: calc(16px + var(--safe-bottom));
+      }
+    }
+
   </style>
 </head>
+
+
 <body>
   <div class="container">
     <div class="image-section"></div>
+
     <div class="calculator-section">
       <div class="calculator-box">
+
         <h2>How Much Are Bad Suppliers Costing You?</h2>
 
         <input type="number" id="monthlyOrders" placeholder="📦 Monthly Number of Orders">
@@ -149,14 +204,21 @@
         <input type="number" id="nonCompliancePercentage" placeholder="📜 Non-Compliance Risk (%)">
 
         <button onclick="calculateLoss()">Calculate Loss</button>
+
         <div id="result"></div>
-        <a href="https://globalbasehk.com/" class="cta">Stop the Losses Now – Switch to Trusted Suppliers!</a>
+
+        <a href="https://globalbasehk.com/" class="cta">
+          Stop the Losses Now – Switch to Trusted Suppliers!
+        </a>
+
       </div>
     </div>
   </div>
 
+
   <script>
     function calculateLoss() {
+
       let monthlyOrders = parseFloat(document.getElementById("monthlyOrders").value) || 0;
       let productCost = parseFloat(document.getElementById("productCost").value) || 0;
       let delayDays = parseFloat(document.getElementById("delayDays").value) || 0;
@@ -191,5 +253,6 @@
       document.getElementById("result").innerHTML = resultHtml;
     }
   </script>
+
 </body>
 </html>
